@@ -1,0 +1,39 @@
+{% load static %}
+<html>
+<head>
+    <title>DJfy</title>
+</head>
+
+<style>
+div.menubar {
+    position: fixed;
+    top: 25px;
+    right: 30px;
+}
+
+div.topbar {
+    position: fixed;
+    top: 0px;
+    text-align: center;
+}
+
+div.bodytext {
+    position: fixed;
+    top: 26px;
+}
+
+</style>
+<div class = topbar>
+<h5><img src="{% static "images/sitelogo.png" %}" alt="Logo" /></h5>
+</div>
+
+<div class = menubar>
+{% block login %}<a href ={{link}}>{{username}}</a>{% endblock %}
+</div>
+
+<div class = bodytext>
+<body>
+    {% block content %}{% endblock %}
+</body>
+</div>
+</html>
