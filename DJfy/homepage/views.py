@@ -5,7 +5,7 @@ from django.shortcuts import render
 def index(request):
     if request.user.is_authenticated:
         text = request.user.email.split('@')[0]
-        link = '/accounts/%s' % text
+        link = '/accounts/user'
     else:
         text = 'Login'
         link = '/accounts/login'
@@ -14,5 +14,4 @@ def index(request):
         'username': text,
         'link': link
     }
-    print (context)
     return render(request, 'homepage/index.html', context)

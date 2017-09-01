@@ -19,19 +19,26 @@ def login(request):
     # First lets check if the user is authenticated with us.
     if not request.user.is_authenticated:
         
-        sp_oauth = oauth2.SpotifyOAuth(
-            client_id=settings.SPOTIFY_CLIENT_ID,
-            client_secret=settings.SPOTIFY_SECRET,
-            redirect_uri=settings.SPOTIFY_REDIRECT_URL,
-            scope=settings.SPOTIFY_SCOPES)
+        sp_oauth = __spotify_auth()
         token_info = sp_oauth.get_cached_token()
         if not token_info:
             auth_url = sp_oauth.get_authorize_url()
         try:
-            webbrowser.open(auth_url)
+            webbrowser.open_new(auth_url)
         except:
             pass
-    return render(request, 'users/login.html')
+        # TODO: Send to a please wait page.
+        return render(request, 'users/login.html')
+    else:
+        # They are authenticated so they should be sent to their profile page.
+        return redirect('/accounts/user')
+    
+def __spotify_auth():
+    return oauth2.SpotifyOAuth(
+            client_id=settings.SPOTIFY_CLIENT_ID,
+            client_secret=settings.SPOTIFY_SECRET,
+            redirect_uri=settings.SPOTIFY_REDIRECT_URL,
+            scope=settings.SPOTIFY_SCOPES)
     
 def logout(request):
     _logout(request)
@@ -39,14 +46,7 @@ def logout(request):
 
 def authenticate(request):
     url = 'local?' + request.META['QUERY_STRING']
-    scopes = 'playlist-modify-private user-read-email' \
-            ' user-modify-playback-state user-read-playback-state' \
-            ' user-read-currently-playing'
-    sp_oauth = oauth2.SpotifyOAuth(
-        client_id=settings.SPOTIFY_CLIENT_ID,
-        client_secret=settings.SPOTIFY_SECRET,
-        redirect_uri=settings.SPOTIFY_REDIRECT_URL,
-        scope=settings.SPOTIFY_SCOPES)
+    sp_oauth = __spotify_auth()
     code = sp_oauth.parse_response_code(url)
     token_info = sp_oauth.get_access_token(code)
     if (token_info == None):
@@ -57,7 +57,7 @@ def authenticate(request):
     email = sp.me()['email']
     
     # Lets now set a cache page and save it.
-    sp_oauth.cache_path = 'cache\/%s.cache' % email
+    sp_oauth.cache_path = settings.SPOTIFY_CACHE_PATH % email
     sp_oauth._save_token_info(access_token)
     
     User = get_user_model()
@@ -73,3 +73,7 @@ def authenticate(request):
     print(user)
     _login(request, user)
     return render(request, 'users/success.html')
+    
+def user(self):
+    # Let's check and make sure the user is logged in.
+    return render(request, 'users/profile.html')

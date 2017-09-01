@@ -20,8 +20,8 @@ from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
-    url(r'^polls/', include('polls.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^$', include('homepage.urls')),
     url(r'^accounts/', include('users.urls')),
+    url(r'^control/', include('spotty.urls')),
 ]

@@ -33,8 +33,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'polls.apps.PollsConfig',
     'homepage.apps.HomepageConfig',
+    'spotty.apps.SpottyConfig',
     'users.apps.UsersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -135,3 +135,5 @@ SPOTIFY_SCOPES = 'playlist-modify-private user-read-email' \
             ' user-read-currently-playing'
             
 SPOTIFY_REDIRECT_URL = 'http://127.0.0.1:8000/accounts/success'
+
+SPOTIFY_CACHE_PATH = 'cache\/%s.cache'
