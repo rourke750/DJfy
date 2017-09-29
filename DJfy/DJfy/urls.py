@@ -21,7 +21,7 @@ from . import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', include('homepage.urls')),
     url(r'^accounts/', include('users.urls')),
     url(r'^control/', include('spotty.urls')),
+    url(r'^', include('homepage.urls')),
 ]

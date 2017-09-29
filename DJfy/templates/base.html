@@ -3,23 +3,17 @@
 <head>
     <title>DJfy</title>
 </head>
-
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <style>
-div.menubar {
-    position: fixed;
-    top: 25px;
-    right: 30px;
-}
 
 div.topbar {
-    position: fixed;
-    top: 0px;
-    text-align: center;
+    position: absolute;
+    left: 45%;
+    margin-top: 20
 }
 
 div.bodytext {
-    position: fixed;
-    top: 26px;
+    position: relative;
 }
 
 </style>
@@ -28,14 +22,21 @@ div.bodytext {
 <h5><img src="{% static "images/sitelogo.png" %}" alt="Logo" /></h5>
 </div>
 -->
+<div>
+    <div class="w3-bar w3-black w3-large">
+        <a href="/" class="w3-bar-item w3-button">Home</a>
+        <a href="/control/playlist" class="w3-bar-item w3-button">Playlist</a>
+        {% block login %}<a href ={{link}} class="w3-bar-item w3-button w3-right">{{username}}</a>{% endblock %}
+    </div>
+    
+    <div class=topbar>
+        {% block header %}{% endblock %}
+    </div>
 
-<div class = menubar>
-{% block login %}<a href ={{link}}>{{username}}</a>{% endblock %}
-</div>
-
-<div class = bodytext>
-<body>
-    {% block content %}{% endblock %}
-</body>
+    <div class = bodytext>
+        <body>
+            {% block content %}{% endblock %}
+        </body>
+    </div>
 </div>
 </html>

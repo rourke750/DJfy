@@ -33,16 +33,16 @@ def login(request):
         # They are authenticated so they should be sent to their profile page.
         return redirect('/accounts/user')
     
+def logout(request):
+    _logout(request)
+    return render(request, 'users/login.html')
+    
 def __spotify_auth():
     return oauth2.SpotifyOAuth(
             client_id=settings.SPOTIFY_CLIENT_ID,
             client_secret=settings.SPOTIFY_SECRET,
             redirect_uri=settings.SPOTIFY_REDIRECT_URL,
             scope=settings.SPOTIFY_SCOPES)
-    
-def logout(request):
-    _logout(request)
-    return render(request, 'users/login.html')
 
 def authenticate(request):
     url = 'local?' + request.META['QUERY_STRING']
@@ -58,7 +58,7 @@ def authenticate(request):
     
     # Lets now set a cache page and save it.
     sp_oauth.cache_path = settings.SPOTIFY_CACHE_PATH % email
-    sp_oauth._save_token_info(access_token)
+    sp_oauth._save_token_info(token_info)
     
     User = get_user_model()
     # Now that we have their info we can log them into our services.
@@ -70,10 +70,20 @@ def authenticate(request):
         # Doesnt have one lets create them one.
         user = User.objects.create_user(username=email,
                                  email=email)
-    print(user)
     _login(request, user)
-    return render(request, 'users/success.html')
+    return login(request)
     
-def user(self):
+def user(request):
     # Let's check and make sure the user is logged in.
-    return render(request, 'users/profile.html')
+    if request.user.is_authenticated:
+        text = 'Logout'
+        link = '/accounts/logout'
+    else:
+        text = ''
+        link = ''
+
+    context = {
+        'username': text,
+        'link': link
+    }
+    return render(request, 'users/profile.html', context)
